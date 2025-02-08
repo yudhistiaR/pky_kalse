@@ -1,0 +1,90 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id       String @id @unique @default(uuid())
+  email    String @unique
+  username String
+  telpon   String
+  jabatan  String
+  password String
+}
+
+model MetaData {
+  id           String    @id @unique @default(cuid())
+  nama         String?
+  jabatan_lama String?
+  jabatan_baru String?
+  tanggal_tmp  DateTime?
+
+  @@fulltext([nama, jabatan_lama, jabatan_baru])
+}
+
+model Hakim {
+  id            String  @id @unique @default(uuid())
+  nip           String?
+  nama          String?
+  tempat_lahir  String?
+  tanggal_lahir String?
+  alamat        String? @db.Text
+  agama         String?
+  jenis_kelamin String?
+  jabatan       String?
+  golongan      String?
+  tlp_kantor    String?
+  alamat_asal   String? @db.Text
+  telpon        String?
+
+  pasangan     String?
+  pengadilanId String?
+  pengadilan   Pengadilan? @relation(fields: [pengadilanId], references: [id])
+
+  pemberitaan Pemberitaan[]
+  anak        AnakHakim[]
+  pendidikan  Pendidikan[]
+  pekerjaan   Pekerjaan[]
+
+  @@fulltext([nip, nama, jabatan, golongan])
+}
+
+model Pemberitaan {
+  id           String  @id @unique @default(uuid())
+  Hakim        Hakim?  @relation(fields: [hakimId], references: [id])
+  hakimId      String?
+  sumberBerita String?
+  judulBerita  String?
+}
+
+model AnakHakim {
+  id      String  @id @unique @default(uuid())
+  nama    String?
+  Hakim   Hakim?  @relation(fields: [hakimId], references: [id])
+  hakimId String?
+}
+
+model Pendidikan {
+  id      String @id @unique @default(uuid())
+  hakimId String
+  hakim   Hakim  @relation(fields: [hakimId], references: [id], onDelete: Cascade)
+  nama    String
+}
+
+model Pekerjaan {
+  id      String @id @unique @default(uuid())
+  hakimId String
+  hakim   Hakim  @relation(fields: [hakimId], references: [id], onDelete: Cascade)
+  nama    String
+}
+
+model Pengadilan {
+  id     String  @id @unique @default(uuid())
+  alamat String? @db.Text
+  nama   String
+  Hakim  Hakim[]
+}

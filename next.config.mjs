@@ -1,4 +1,10 @@
 /** @type {import('next').NextConfig} */
-const nextConfig = {};
+const nextConfig = {
+  experimental: {
+    serverActions: {
+      serverComponentsExternalPackages: ["@react-pdf/renderer"],
+    },
+  },
+};
 
 export default nextConfig;
