@@ -7,7 +7,7 @@ const KopSurat = () => {
       <div className="flex justify-between items-center">
         <Image src="/logo-pky.png" alt="Logo PKY" width={90} height={90} />
         <div className="text-center flex-1">
-          <h1 className="font-bold text-2xl">PENGHUBUN KOMISI YUDISIAL</h1>
+          <h1 className="font-bold text-2xl">PENGHUBUNG KOMISI YUDISIAL</h1>
           <h1 className="font-bold text-2xl">KALIMANTA SELATAN</h1>
           <p className="text-sm">
             Jln. Gatot Subroto I No.1 RT.20 RW.002, Kel. Kebun Bunga, Kec.

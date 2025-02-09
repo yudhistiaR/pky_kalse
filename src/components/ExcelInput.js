@@ -52,43 +52,33 @@ const ExcelInput = () => {
 
       const [headerRow, ...rows] = sheetData;
 
-      setHeaders(headerRow);
-      setTableData(rows);
+      // Filter header untuk menghapus nilai null
+      const filteredHeaders = headerRow.filter((header) => header !== null);
+
+      // Filter dan proses data
+      const filteredData = rows.map((row) => {
+        const newRow = {};
+        headerRow.forEach((header, index) => {
+          if (header !== null) {
+            newRow[header] = row[index];
+          }
+        });
+        return newRow;
+      });
+
+      setHeaders(filteredHeaders);
+      setTableData(filteredData);
     };
     reader.readAsArrayBuffer(file);
   };
 
-  const filteredHeaders = headers.filter((header) => header !== null);
-
-  const filteredData = tableData
-    .map((row) => {
-      const newRow = [];
-      headers.forEach((header, index) => {
-        if (header !== null) {
-          if (header === "JABATAN LAMA" && row[2] && row[3]) {
-            newRow.push(`${row[2]} ${row[3]}`);
-          } else if (header !== "JABATAN LAMA") {
-            newRow.push(row[index]);
-          }
-        }
-      });
-      return newRow;
-    })
-    .filter((row) =>
-      row.some((cell) => cell !== undefined && cell !== null && cell !== ""),
-    );
-
   const processJsonData = () => {
-    const jsonData = filteredData.map(
-      ([_, nama, jabatanLama, jabatanBaru]) => ({
-        nama,
-        jabatan_lama: jabatanLama,
-        jabatan_baru: jabatanBaru,
-        tanggal_tmp: tpmDate,
-      }),
-    );
-
-    return jsonData;
+    return tableData.map((row) => ({
+      nama: row["NAMA"],
+      jabatan_lama: row["JABATAN LAMA"],
+      jabatan_baru: row["JABATAN BARU"],
+      tanggal_tmp: tpmDate, // Sesuaikan dengan nilai yang diinginkan
+    }));
   };
 
   const handleSubmit = async (e) => {
@@ -99,8 +89,9 @@ const ExcelInput = () => {
       method: "POST",
       body: JSON.stringify(dataInput),
     }).then((res) => {
-      if (!res) {
+      if (!res.ok) {
         toast.error("Data Gagal Di Tambahkan");
+        return;
       }
 
       toast.success("Data Berhasil Di Tambahkan");
@@ -146,16 +137,18 @@ const ExcelInput = () => {
               <Table>
                 <TableHeader>
                   <TableRow>
-                    {filteredHeaders.map((header, index) => (
+                    {headers.map((header, index) => (
                       <TableHead key={index}>{header}</TableHead>
                     ))}
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {filteredData.map((row, rowIndex) => (
+                  {tableData.map((row, rowIndex) => (
                     <TableRow key={rowIndex}>
-                      {row.map((cell, cellIndex) => (
-                        <TableCell key={cellIndex}>{cell || "-"}</TableCell>
+                      {headers.map((header, colIndex) => (
+                        <TableCell key={colIndex}>
+                          {row[header] || "-"}
+                        </TableCell>
                       ))}
                     </TableRow>
                   ))}

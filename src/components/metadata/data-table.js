@@ -1,6 +1,5 @@
 "use client";
 
-import { pdf } from "@react-pdf/renderer";
 import { convertDate } from "@/lib/convertDate";
 import { useState, useEffect } from "react";
 import dynamic from "next/dynamic";
@@ -24,8 +23,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { colument } from "./columns";
-import { Printer, Trash } from "lucide-react";
-import MetaDataPdf from "../createPdf/metadata";
+import MetaDataPdf from "../createPdf/metadata"; // Import MetaDataPdf
 
 const ExcelInput = dynamic(() => import("../ExcelInput"), { ssr: false });
 
@@ -80,12 +78,6 @@ export function DataTable() {
     if (page > 1) setPage((prev) => prev - 1);
   };
 
-  const downloadPDF = async () => {
-    const blob = await pdf(<MetaDataPdf data={items} />).toBlob();
-    const url = URL.createObjectURL(blob);
-    window.open(url, "_blank");
-  };
-
   return (
     <div className="mt-4 bg-white p-4 rounded-lg shadow-lg space-y-4">
       <div className="flex justify-between items-center">
@@ -117,9 +109,8 @@ export function DataTable() {
             }}
           />
           <ExcelInput />
-          <Button size="icon" className="bg-green-600" onClick={downloadPDF}>
-            <Printer />
-          </Button>
+          {/* Gunakan MetaDataPdf dan kirim data sebagai props */}
+          <MetaDataPdf data={items} />
         </div>
         <div>
           <Select

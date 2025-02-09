@@ -12,3 +12,13 @@ export const convertDate = (isoDate) => {
 
   return date.toLocaleDateString("id-ID", options);
 };
+
+export const formatDate = (dateString) => {
+  const date = new Date(dateString);
+  return date.toLocaleDateString("id-ID", {
+    weekday: "long",
+    day: "2-digit",
+    month: "long",
+    year: "numeric",
+  });
+};

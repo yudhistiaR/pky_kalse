@@ -59,7 +59,9 @@ const DetailHakim = () => {
         }}
       >
         <KopSurat />
-        <h2 className="text-2xl font-bold mb-4 text-center">{`Profile Hakim ${pengadilan}`}</h2>
+        <h2 className="text-2xl font-bold mb-4 text-center">
+          {`Profile Hakim ${pengadilan}`.toUpperCase()}
+        </h2>
         {isPending ? (
           <div className="text-center h-96 flex items-center justify-center">
             <p className="text-lg text-slate-400">Loading...</p>
