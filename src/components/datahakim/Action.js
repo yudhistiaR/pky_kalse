@@ -12,7 +12,6 @@ export const deleteAction = async ({ id }) => {
 };
 
 export const createAction = async (formData) => {
-  console.log(formData);
   try {
     await fetch(`${process.env.API_URL}/api/v1/hakim`, {
       method: "POST",
@@ -44,6 +43,13 @@ export const updateAction = async ({ id, data }) => {
 
 export const getDetailHakim = async (id) => {
   const res = await fetch(`${process.env.API_URL}/api/v1/hakim/${id}`, {
+    method: "GET",
+  });
+  return await res.json();
+};
+
+export const getHakim = async () => {
+  const res = await fetch(`${process.env.API_URL}/api/v1/hakim`, {
     method: "GET",
   });
   return await res.json();

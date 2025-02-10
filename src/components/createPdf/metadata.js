@@ -1,11 +1,12 @@
 "use client";
 
 import { convertDate, formatDate } from "@/lib/convertDate";
-import { useRef, forwardRef } from "react";
+import { useRef } from "react";
 import { useReactToPrint } from "react-to-print";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import KopSurat from "@/components/createPdf/kopSurat";
+
 const PrintButton = ({ onPrint, disabled }) => (
   <Button onClick={onPrint} disabled={disabled}>
     Cetak PDF
@@ -19,7 +20,7 @@ const PrintableContent = ({ data, ref }) => (
   >
     <KopSurat />
     <h2 className="text-2xl font-bold mb-4 text-center">{`DATA TPM TANGGAL ${formatDate(
-      data[0]?.tanggal_tmp
+      data[0]?.tanggal_tmp,
     )}`}</h2>
     {data && data.length > 0 ? (
       <table className="w-full border border-black border-collapse print:p-10">

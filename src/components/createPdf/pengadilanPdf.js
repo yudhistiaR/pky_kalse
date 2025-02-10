@@ -34,12 +34,12 @@ const PengadilanPdf = ({ data }) => {
                 <Text
                   style={[styles.tableCell, { flex: 3, textAlign: "start" }]}
                 >
-                  {item.nama_pengadilan}
+                  {item.nama}
                 </Text>
                 <Text
                   style={[styles.tableCell, { flex: 5, textAlign: "justify" }]}
                 >
-                  {item.alamat_pengadilan}
+                  {item.alamat}
                 </Text>
                 <Text style={[styles.tableCell, { flex: 1 }]}>
                   {item._count.Hakim} Orang
@@ -59,7 +59,7 @@ const styles = StyleSheet.create({
     fontFamily: "Helvetica",
   },
   header: {
-    fontSize: 18,
+    fontSize: "10px",
     marginBottom: 10,
     textAlign: "center",
     fontWeight: "bold",
@@ -76,8 +76,8 @@ const styles = StyleSheet.create({
     flexDirection: "row",
   },
   tableCell: {
-    padding: 5,
-    fontSize: 10,
+    padding: "5px",
+    fontSize: "10px",
     borderRightWidth: 1,
     borderBottomWidth: 1,
     borderColor: "#000",

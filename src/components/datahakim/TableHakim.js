@@ -29,6 +29,7 @@ import {
 import DeleteAction from "./DeleteAction";
 import CreateActionHakim from "./CreateHakim";
 import Link from "next/link";
+import DataNamaHakim from "../createPdf/dataNamaHakim";
 
 import { Info } from "lucide-react";
 
@@ -89,6 +90,7 @@ export function TableHakim() {
               placeholder="Cari..."
             />
             <CreateActionHakim />
+            <DataNamaHakim data={data} />
           </div>
           <div>
             <Select onValueChange={handleLimitChange}>

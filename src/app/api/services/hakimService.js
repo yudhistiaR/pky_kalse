@@ -4,13 +4,20 @@ export class HakimServices {
   static async GETHAKIM() {
     return await prisma.hakim.findMany({
       include: {
-        pengadilan: true,
+        pengadilan: {
+          orderBy: {
+            nama: "desc",
+          },
+          select: {
+            nama: true,
+          },
+        },
       },
     });
   }
 
   static async GETID(id) {
-    return await prisma.hakim.findMany({
+    return await prisma.hakim.findUnique({
       where: {
         id: id,
       },

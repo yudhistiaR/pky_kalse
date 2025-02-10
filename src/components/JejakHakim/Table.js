@@ -23,59 +23,9 @@ import { columentHakim } from "../datahakim/columenHakim";
 import { useQuery } from "@tanstack/react-query";
 import DeleteAction from "../datahakim/DeleteAction";
 import CreateActionJejak from "./CreateAction";
-import CetakPdfJejak from "./CetakPdfJejak";
 import Link from "next/link";
 
 import { Info } from "lucide-react";
-
-const dummyData = [
-  {
-    id: 1,
-    nama: "Ahmad Fauzi",
-    jabatan: "Ketua Pengadilan",
-    pengadilan: "Pengadilan Negeri Banjarmasin",
-    jumlah: 5,
-    keterangan: "Senior",
-    hakim_baru: "Tidak",
-  },
-  {
-    id: 2,
-    nama: "Budi Santoso",
-    jabatan: "Hakim Anggota",
-    pengadilan: "Pengadilan Agama Martapura",
-    jumlah: 3,
-    keterangan: "Junior",
-    hakim_baru: "Ya",
-  },
-  {
-    id: 3,
-    nama: "Citra Dewi",
-    jabatan: "Hakim Madya",
-    pengadilan: "Pengadilan Tata Usaha Negara Banjarmasin",
-    jumlah: 4,
-    keterangan: "Menengah",
-    hakim_baru: "Tidak",
-  },
-  {
-    id: 4,
-    nama: "Dewi Sari",
-    jabatan: "Hakim Pratama",
-    pengadilan: "Pengadilan Militer II-09 Banjarmasin",
-    jumlah: 2,
-    keterangan: "Baru",
-    hakim_baru: "Ya",
-  },
-  {
-    id: 5,
-    nama: "Eko Wijaya",
-    jabatan: "Hakim Utama",
-    pengadilan: "Pengadilan Negeri Banjarbaru",
-    jumlah: 6,
-    keterangan: "Senior",
-    hakim_baru: "Tidak",
-  },
-  // Tambahkan lebih banyak data jika diperlukan
-];
 
 export function TableRekamJejak() {
   const [page, setPage] = useState(1);
@@ -131,7 +81,6 @@ export function TableRekamJejak() {
             placeholder="Cari..."
           />
           <CreateActionJejak />
-          <CetakPdfJejak data={dummyData} />
         </div>
         <div>
           <Select onValueChange={handleLimitChange}>
