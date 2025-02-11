@@ -2,7 +2,7 @@ import { MetaDataContollers } from "../../controller/metadataController";
 
 export async function GET(req) {
   const searchParamas = req.nextUrl.searchParams;
-  const mutasi = searchParamas.get("mutasi");
+  const mutasi = searchParamas.get("m");
   const page = searchParamas.get("page") || 1;
   const limit = searchParamas.get("limit") || 10;
   const search = searchParamas.get("search");

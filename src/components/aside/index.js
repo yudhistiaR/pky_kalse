@@ -12,8 +12,11 @@ import {
   Scale,
   Book,
   Library,
+  ChevronDown,
+  Dot,
 } from "lucide-react";
 import Link from "next/link";
+import { useState } from "react";
 
 const navItem = [
   {
@@ -25,8 +28,28 @@ const navItem = [
   {
     id: 2,
     name: "Data TPM",
-    url: "/dashboard/metadata",
+    url: "#",
     icon: <Database color="#d97706" />,
+    subMenu: [
+      {
+        id: 20,
+        name: "Mutasi Hakim",
+        url: "/dashboard/metadata",
+        icon: <Dot color="#d97706" />,
+      },
+      {
+        id: 21,
+        name: "Mutasi Keluar",
+        url: "/dashboard/mutasikeluar?m=exit",
+        icon: <Dot color="#d97706" />,
+      },
+      {
+        id: 22,
+        name: "Mutasi Masuk",
+        url: "/dashboard/mutasimasuk?m=enter",
+        icon: <Dot color="#d97706" />,
+      },
+    ],
   },
   {
     id: 3,
@@ -55,22 +78,50 @@ const navItem = [
 ];
 
 const NavLink = ({ path }) => {
+  const [openSubMenu, setOpenSubMenu] = useState(null);
+
   return (
     <>
       {navItem.map((item) => (
         <motion.li key={item.id}>
           <Link
             href={item.url}
+            onClick={() =>
+              setOpenSubMenu(openSubMenu === item.id ? null : item.id)
+            }
             className={cn(
-              "flex justify-start items-center gap-2 transition-colors duration-300 font-semibold p-4 hover:bg-gray-200 hover:border-r-4 hover:border-amber-600",
+              "flex justify-between items-center w-full text-left gap-2 transition-colors duration-300 font-semibold p-4 hover:bg-gray-200 hover:border-r-4 hover:border-amber-600",
               path === item.url
                 ? "border-r-4 border-amber-600 bg-gray-200"
                 : "",
             )}
           >
-            <span>{item.icon}</span>
-            <span>{item.name}</span>
+            <div className="flex items-center gap-2">
+              <span>{item.icon}</span>
+              <span>{item.name}</span>
+            </div>
+            {item.subMenu && <ChevronDown className="w-4 h-4" />}
           </Link>
+          {item.subMenu && openSubMenu === item.id && (
+            <ul className="pl-4 bg-gray-100">
+              {item.subMenu.map((sub) => (
+                <li key={sub.id}>
+                  <Link
+                    href={sub.url}
+                    className={cn(
+                      "flex items-center py-2 text-sm font-semibold hover:bg-gray-300",
+                      path === sub.url
+                        ? "border-r-4 border-amber-600 bg-gray-200"
+                        : "",
+                    )}
+                  >
+                    {sub.icon}
+                    {sub.name}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          )}
         </motion.li>
       ))}
     </>

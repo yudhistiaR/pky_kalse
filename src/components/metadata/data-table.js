@@ -23,16 +23,20 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { colument } from "./columns";
-import MetaDataPdf from "../createPdf/metadata"; // Import MetaDataPdf
+import MetaDataPdf from "../createPdf/metadata";
+import { useSearchParams } from "next/navigation";
 
 const ExcelInput = dynamic(() => import("../ExcelInput"), { ssr: false });
 
 export function DataTable() {
+  const s = useSearchParams();
+  const type = s.get("m");
   const [items, setItems] = useState([]);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [loading, setLoading] = useState(false);
   const [filters, setFilters] = useState({
+    mutasi: type ?? "",
     limit: 10,
     search: "",
     start: "",
@@ -49,6 +53,7 @@ export function DataTable() {
     try {
       const params = new URLSearchParams({
         page,
+        mutasi: filters.mutasi,
         limit: filters.limit,
         search: filters.search,
         start: filters.start,
@@ -82,33 +87,37 @@ export function DataTable() {
     <div className="mt-4 bg-white p-4 rounded-lg shadow-lg space-y-4">
       <div className="flex justify-between items-center">
         <div className="flex items-center w-full gap-2">
-          <Input
-            onChange={(e) => {
-              setPage(1);
-              setFilters((prev) => ({ ...prev, search: e.target.value }));
-            }}
-            className="w-3/12"
-            placeholder="Cari..."
-          />
-          <Input
-            placeholder="Mulai"
-            className="w-3/12"
-            type="date"
-            onChange={(e) => {
-              setPage(1);
-              setFilters((prev) => ({ ...prev, start: e.target.value }));
-            }}
-          />
-          <Input
-            placeholder="Berakhir"
-            className="w-3/12"
-            type="date"
-            onChange={(e) => {
-              setPage(1);
-              setFilters((prev) => ({ ...prev, end: e.target.value }));
-            }}
-          />
-          <ExcelInput />
+          {type == "enter" || type == "exit" ? null : (
+            <>
+              <Input
+                onChange={(e) => {
+                  setPage(1);
+                  setFilters((prev) => ({ ...prev, search: e.target.value }));
+                }}
+                className="w-3/12"
+                placeholder="Cari..."
+              />
+              <Input
+                placeholder="Mulai"
+                className="w-3/12"
+                type="date"
+                onChange={(e) => {
+                  setPage(1);
+                  setFilters((prev) => ({ ...prev, start: e.target.value }));
+                }}
+              />
+              <Input
+                placeholder="Berakhir"
+                className="w-3/12"
+                type="date"
+                onChange={(e) => {
+                  setPage(1);
+                  setFilters((prev) => ({ ...prev, end: e.target.value }));
+                }}
+              />
+              <ExcelInput />
+            </>
+          )}
           {/* Gunakan MetaDataPdf dan kirim data sebagai props */}
           <MetaDataPdf data={items} />
         </div>
