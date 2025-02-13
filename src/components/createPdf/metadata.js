@@ -13,13 +13,13 @@ const PrintButton = ({ onPrint, disabled }) => (
   </Button>
 );
 
-const PrintableContent = ({ data, ref }) => (
+const PrintableContent = ({ data, ref, title }) => (
   <div
     ref={ref}
     className="printable-area bg-white w-[210mm] h-[297mm] mx-auto p-5 box-border print:p-10"
   >
     <KopSurat />
-    <h2 className="text-2xl font-bold mb-4 text-center">{`DATA TPM TANGGAL `}</h2>
+    <h2 className="text-2xl font-bold mb-4 text-center">{title}</h2>
     {data && data.length > 0 ? (
       <table className="w-full border border-black border-collapse print:p-10">
         <thead>
@@ -56,12 +56,21 @@ const PrintableContent = ({ data, ref }) => (
   </div>
 );
 
-const MetaDataPdf = ({ data }) => {
+const MetaDataPdf = ({ data, mutasi }) => {
   const printRef = useRef(null);
+  let type;
+
+  if (mutasi === "exit") {
+    type = "Mutasi Hakim Keluar Kalimantan Selatan";
+  } else if (mutasi === "enter") {
+    type = "Mutasi Hakim Masuk Kalimantan Selatan";
+  } else {
+    type = "Mutasi Hakim Kalimantan Selatan";
+  }
 
   const handlePrint = useReactToPrint({
     contentRef: printRef,
-    documentTitle: `Metadata TPM`,
+    documentTitle: type,
     onAfterPrint: () => toast.success("Berhasil mencetak PDF"),
   });
 
@@ -73,7 +82,7 @@ const MetaDataPdf = ({ data }) => {
       />
       {/* Gunakan ref langsung ke PrintableContent */}
       <div style={{ display: "none" }}>
-        <PrintableContent ref={printRef} data={data} />
+        <PrintableContent ref={printRef} data={data} title={type} />
       </div>
     </div>
   );

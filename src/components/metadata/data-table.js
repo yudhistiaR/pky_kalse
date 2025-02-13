@@ -107,7 +107,7 @@ export function DataTable() {
               <ExcelInput />
             </>
           )}
-          <MetaDataPdf data={items} />
+          <MetaDataPdf data={items} mutasi={type} />
         </div>
         <div>
           <Select
