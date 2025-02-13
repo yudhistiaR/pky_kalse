@@ -1,8 +1,9 @@
 "use client";
 
 import { convertDate } from "@/lib/convertDate";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import dynamic from "next/dynamic";
+import { useQuery } from "@tanstack/react-query";
 
 //components
 import {
@@ -31,10 +32,7 @@ const ExcelInput = dynamic(() => import("../ExcelInput"), { ssr: false });
 export function DataTable() {
   const s = useSearchParams();
   const type = s.get("m");
-  const [items, setItems] = useState([]);
   const [page, setPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(1);
-  const [loading, setLoading] = useState(false);
   const [filters, setFilters] = useState({
     mutasi: type ?? "",
     limit: 10,
@@ -43,37 +41,28 @@ export function DataTable() {
     end: "",
   });
 
-  useEffect(() => {
-    getData();
-  }, [page, filters.limit, filters.search, filters.start, filters.end]);
-
-  const getData = async () => {
-    setLoading(true);
-
-    try {
-      const params = new URLSearchParams({
-        page,
-        mutasi: filters.mutasi,
-        limit: filters.limit,
-        search: filters.search,
-        start: filters.start,
-        end: filters.end,
-      });
-
-      const res = await fetch(`/api/v1/metadata?${params.toString()}`, {
-        method: "GET",
-      });
-
-      const result = await res.json();
-
-      setItems(result.data);
-      setTotalPages(result.totalPage);
-    } catch (error) {
-      console.log(error);
-    } finally {
-      setLoading(false);
-    }
+  const fetchData = async () => {
+    const params = new URLSearchParams({
+      page,
+      mutasi: filters.mutasi,
+      limit: filters.limit,
+      search: filters.search,
+      start: filters.start,
+      end: filters.end,
+    });
+    const res = await fetch(`/api/v1/metadata?${params.toString()}`, {
+      method: "GET",
+    });
+    return await res.json();
   };
+
+  const { data, isLoading } = useQuery({
+    queryKey: ["metadata", page, filters],
+    queryFn: async () => await fetchData(),
+  });
+
+  const items = data?.data || [];
+  const totalPages = data?.totalPage || 1;
 
   const handleNext = () => {
     if (page < totalPages) setPage((prev) => prev + 1);
@@ -118,7 +107,6 @@ export function DataTable() {
               <ExcelInput />
             </>
           )}
-          {/* Gunakan MetaDataPdf dan kirim data sebagai props */}
           <MetaDataPdf data={items} />
         </div>
         <div>

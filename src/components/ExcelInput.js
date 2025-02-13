@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { useState } from "react";
 import * as XLSX from "xlsx";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 // Components
 import {
@@ -34,7 +35,32 @@ const ExcelInput = () => {
   const [tableData, setTableData] = useState([]);
   const [tpmDate, setTpmDate] = useState(null);
 
-  const path = useRouter();
+  const queryClient = useQueryClient();
+
+  const { mutate } = useMutation({
+    mutationKey: ["metadata"],
+    mutationFn: async (dataInput) => {
+      const res = await fetch("/api/v1/metadata", {
+        method: "POST",
+        body: JSON.stringify(dataInput),
+      });
+      if (!res.ok) {
+        throw new Error("Data Gagal Di Tambahkan");
+      }
+      return res.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries(["metadata"]);
+      toast.success("Data Berhasil Di Tambahkan");
+      setTpmDate(null);
+      setHeaders([]);
+      setTableData([]);
+      setOpen(false);
+    },
+    onError: () => {
+      toast.error("Data Gagal Di Tambahkan");
+    },
+  });
 
   const handleFileUpload = (e) => {
     const file = e.target.files[0];
@@ -52,10 +78,8 @@ const ExcelInput = () => {
 
       const [headerRow, ...rows] = sheetData;
 
-      // Filter header untuk menghapus nilai null
       const filteredHeaders = headerRow.filter((header) => header !== null);
 
-      // Filter dan proses data
       const filteredData = rows.map((row) => {
         const newRow = {};
         headerRow.forEach((header, index) => {
@@ -77,30 +101,14 @@ const ExcelInput = () => {
       nama: row["NAMA"],
       jabatan_lama: row["JABATAN LAMA"],
       jabatan_baru: row["JABATAN BARU"],
-      tanggal_tmp: tpmDate, // Sesuaikan dengan nilai yang diinginkan
+      tanggal_tmp: tpmDate,
     }));
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
     const dataInput = processJsonData();
-
-    return await fetch("/api/v1/metadata", {
-      method: "POST",
-      body: JSON.stringify(dataInput),
-    }).then((res) => {
-      if (!res.ok) {
-        toast.error("Data Gagal Di Tambahkan");
-        return;
-      }
-
-      toast.success("Data Berhasil Di Tambahkan");
-      setTpmDate(null);
-      setHeaders([]);
-      setTableData([]);
-      setOpen(false);
-      path.refresh();
-    });
+    mutate(dataInput);
   };
 
   return (
