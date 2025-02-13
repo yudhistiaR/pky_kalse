@@ -19,7 +19,9 @@ export class MetaDataServices {
 
     const pengadilanList = await prisma.pengadilan.findMany();
     const listMetaData = await prisma.metaData.findMany();
-    const pengadilanSet = new Set(pengadilanList.map((p) => p.nama));
+    const pengadilanSet = new Set(
+      pengadilanList.map((p) => p.nama.toUpperCase()),
+    );
 
     if (mutasi == "enter") {
       let hasilFilter = listMetaData.filter((h) =>
@@ -51,7 +53,7 @@ export class MetaDataServices {
       };
     } else if (mutasi == "exit") {
       let hasilFilter = listMetaData.filter((h) =>
-        pengadilanSet.has(h.jabatan_lama),
+        pengadilanSet.has(extractPengadilan(h.jabatan_lama)),
       );
 
       if (searchData && searchData.trim() !== "") {
