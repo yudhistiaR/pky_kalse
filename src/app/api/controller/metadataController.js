@@ -33,4 +33,15 @@ export class MetaDataContollers {
       return errorResponse(error);
     }
   }
+
+  static async DELETEMANY(req) {
+    try {
+      const request = await req.json();
+      const response = await MetaDataServices.DELETEMANY(request);
+
+      return NextResponse.json(response, { status: 200 });
+    } catch (error) {
+      return errorResponse(error);
+    }
+  }
 }

@@ -20,12 +20,12 @@ export class MetaDataServices {
     const pengadilanList = await prisma.pengadilan.findMany();
     const listMetaData = await prisma.metaData.findMany();
     const pengadilanSet = new Set(
-      pengadilanList.map((p) => p.nama.toUpperCase()),
+      pengadilanList.map((p) => p.nama.toUpperCase())
     );
 
     if (mutasi == "enter") {
       let hasilFilter = listMetaData.filter((h) =>
-        pengadilanSet.has(extractPengadilan(h.jabatan_baru)),
+        pengadilanSet.has(extractPengadilan(h.jabatan_baru))
       );
 
       if (searchData && searchData.trim() !== "") {
@@ -34,7 +34,7 @@ export class MetaDataServices {
           (h) =>
             h.nama.toLowerCase().includes(searchLower) ||
             h.jabatan_lama.toLowerCase().includes(searchLower) ||
-            h.jabatan_baru.toLowerCase().includes(searchLower),
+            h.jabatan_baru.toLowerCase().includes(searchLower)
         );
       }
 
@@ -42,7 +42,7 @@ export class MetaDataServices {
       const totalPage = Math.ceil(totalItems / limitNumber);
       const paginatedData = hasilFilter.slice(
         (pageNumber - 1) * limitNumber,
-        pageNumber * limitNumber,
+        pageNumber * limitNumber
       );
 
       return {
@@ -53,7 +53,7 @@ export class MetaDataServices {
       };
     } else if (mutasi == "exit") {
       let hasilFilter = listMetaData.filter((h) =>
-        pengadilanSet.has(extractPengadilan(h.jabatan_lama)),
+        pengadilanSet.has(extractPengadilan(h.jabatan_lama))
       );
 
       if (searchData && searchData.trim() !== "") {
@@ -62,7 +62,7 @@ export class MetaDataServices {
           (h) =>
             h.nama.toLowerCase().includes(searchLower) ||
             h.jabatan_lama.toLowerCase().includes(searchLower) ||
-            h.jabatan_baru.toLowerCase().includes(searchLower),
+            h.jabatan_baru.toLowerCase().includes(searchLower)
         );
       }
 
@@ -70,7 +70,7 @@ export class MetaDataServices {
       const totalPage = Math.ceil(totalItems / limitNumber);
       const paginatedData = hasilFilter.slice(
         (pageNumber - 1) * limitNumber,
-        pageNumber * limitNumber,
+        pageNumber * limitNumber
       );
 
       return {
@@ -138,5 +138,16 @@ export class MetaDataServices {
 
   static async CREATEMANY(req) {
     return await prisma.metaData.createMany({ data: req });
+  }
+
+  static async DELETEMANY(req) {
+    console.log(req);
+    return await prisma.metaData.deleteMany({
+      where: {
+        id: {
+          in: req.userId,
+        },
+      },
+    });
   }
 }

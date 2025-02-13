@@ -26,3 +26,7 @@ export async function GET(req) {
 export async function POST(req) {
   return await MetaDataContollers.CREATEMANY(req);
 }
+
+export async function DELETE(req) {
+  return await MetaDataContollers.DELETEMANY(req);
+}
