@@ -56,7 +56,7 @@ export function DataTable() {
     return await res.json();
   };
 
-  const { data, isLoading } = useQuery({
+  const { data, isLoading, isPending, isError } = useQuery({
     queryKey: ["metadata", page, filters],
     queryFn: async () => await fetchData(),
   });
@@ -128,28 +128,38 @@ export function DataTable() {
           </Select>
         </div>
       </div>
-      <div>
-        <Table>
-          <TableHeader>
-            <TableRow>
-              {colument?.map((item, _) => (
-                <TableHead key={item.accesseorKey}>{item.header}</TableHead>
-              ))}
-            </TableRow>
-          </TableHeader>
-          <TableBody className="overflow-y-scroll">
-            {items?.map((item, index) => (
-              <TableRow key={item.id}>
-                <TableCell>{index + 1}</TableCell>
-                <TableCell>{item.nama}</TableCell>
-                <TableCell>{item.jabatan_lama}</TableCell>
-                <TableCell>{item.jabatan_baru}</TableCell>
-                <TableCell>{convertDate(item.tanggal_tmp)}</TableCell>
+
+      {isLoading || isPending ? (
+        <div className="flex justify-center py-6">
+          <div className="w-8 h-8 border-4 border-gray-300 border-t-blue-500 rounded-full animate-spin"></div>
+        </div>
+      ) : isError ? (
+        <div className="text-center py-4 text-red-500">Error loading data.</div>
+      ) : (
+        <div>
+          <Table>
+            <TableHeader>
+              <TableRow>
+                {colument?.map((item, _) => (
+                  <TableHead key={item.accesseorKey}>{item.header}</TableHead>
+                ))}
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </div>
+            </TableHeader>
+            <TableBody className="overflow-y-scroll">
+              {items?.map((item, index) => (
+                <TableRow key={item.id}>
+                  <TableCell>{index + 1}</TableCell>
+                  <TableCell>{item.nama}</TableCell>
+                  <TableCell>{item.jabatan_lama}</TableCell>
+                  <TableCell>{item.jabatan_baru}</TableCell>
+                  <TableCell>{convertDate(item.tanggal_tmp)}</TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </div>
+      )}
+
       <div className="flex justify-end items-center gap-5">
         <Button onClick={handlePrev} disabled={page === 1}>
           Previous
