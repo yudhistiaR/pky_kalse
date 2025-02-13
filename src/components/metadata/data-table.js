@@ -3,7 +3,8 @@
 import { convertDate } from "@/lib/convertDate";
 import { useState } from "react";
 import dynamic from "next/dynamic";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
 
 //components
 import {
@@ -33,6 +34,8 @@ export function DataTable() {
   const s = useSearchParams();
   const type = s.get("m");
   const [page, setPage] = useState(1);
+  const [selectedIds, setSelectedIds] = useState([]);
+  const [allSelected, setAllSelected] = useState(false);
   const [filters, setFilters] = useState({
     mutasi: type ?? "",
     limit: 10,
@@ -40,6 +43,8 @@ export function DataTable() {
     start: "",
     end: "",
   });
+
+  const queryClient = useQueryClient();
 
   const fetchData = async () => {
     const params = new URLSearchParams({
@@ -71,6 +76,51 @@ export function DataTable() {
   const handlePrev = () => {
     if (page > 1) setPage((prev) => prev - 1);
   };
+
+  const toggleSelect = (id) => {
+    setSelectedIds((prev) =>
+      prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
+    );
+  };
+
+  const deleteSelected = () => {
+    if (selectedIds.length === 0) return alert("Pilih data terlebih dahulu!");
+    mutate(selectedIds);
+  };
+
+  const toggleSelectAll = (items) => {
+    if (allSelected) {
+      setSelectedIds([]);
+    } else {
+      setSelectedIds(items.map((item) => item.id));
+    }
+    setAllSelected(!allSelected);
+  };
+
+  const { mutate } = useMutation({
+    mutationKey: ["metadata"],
+    mutationFn: async (ids) => {
+      const res = await fetch("/api/v1/metadata", {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ userId: ids }),
+      });
+
+      if (!res.ok) throw new Error("Gagal menghapus data");
+      return res.json();
+    },
+    onSuccess: (result) => {
+      toast.success(`Berhasil menghapus ${result.count} data`);
+      setSelectedIds([]);
+      setAllSelected(false);
+      queryClient.invalidateQueries(["metadata"]);
+    },
+    onError: () => {
+      toast.success(`Gagal Menghapus data`);
+    },
+  });
 
   return (
     <div className="mt-4 bg-white p-4 rounded-lg shadow-lg space-y-4">
@@ -108,6 +158,13 @@ export function DataTable() {
             </>
           )}
           <MetaDataPdf data={items} mutasi={type} />
+          <Button
+            onClick={deleteSelected}
+            disabled={selectedIds.length === 0}
+            className="bg-red-500 hover:bg-red-600 text-white"
+          >
+            Hapus Data
+          </Button>
         </div>
         <div>
           <Select
@@ -140,6 +197,14 @@ export function DataTable() {
           <Table>
             <TableHeader>
               <TableRow>
+                <TableHead>
+                  <Input
+                    className="accent-red-500 w-5 h-5"
+                    type="checkbox"
+                    checked={allSelected}
+                    onChange={() => toggleSelectAll(items)}
+                  />
+                </TableHead>
                 {colument?.map((item, _) => (
                   <TableHead key={item.accesseorKey}>{item.header}</TableHead>
                 ))}
@@ -148,6 +213,14 @@ export function DataTable() {
             <TableBody className="overflow-y-scroll">
               {items?.map((item, index) => (
                 <TableRow key={item.id}>
+                  <TableCell>
+                    <Input
+                      className="accent-red-500 w-5 h-5"
+                      type="checkbox"
+                      checked={selectedIds.includes(item.id)}
+                      onChange={() => toggleSelect(item.id)}
+                    />
+                  </TableCell>
                   <TableCell>{index + 1}</TableCell>
                   <TableCell>{item.nama}</TableCell>
                   <TableCell>{item.jabatan_lama}</TableCell>

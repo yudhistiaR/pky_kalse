@@ -141,7 +141,6 @@ export class MetaDataServices {
   }
 
   static async DELETEMANY(req) {
-    console.log(req);
     return await prisma.metaData.deleteMany({
       where: {
         id: {
