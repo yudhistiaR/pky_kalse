@@ -17,6 +17,7 @@ export class HakimController {
   }
 
   static async GETID(id) {
+    console.log(id);
     try {
       Validation.Validate(ValidationID, { id: id });
       const response = await HakimServices.GETID(id);

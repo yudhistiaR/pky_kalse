@@ -67,7 +67,7 @@ const DetailHakim = () => {
             <p className="text-lg text-slate-400">Loading...</p>
           </div>
         ) : data && data.length > 0 ? (
-          data.map((hakim, index) => (
+          data?.map((hakim, index) => (
             <table
               key={index}
               className="w-full border-collapse border border-gray-300 mb-6"

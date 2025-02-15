@@ -3,32 +3,15 @@ import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
 async function main() {
+  const daftarPengadilan = await prisma.pengadilan.findMany();
+  const hakimList = [];
+
   console.log("Seeding database...");
 
-  // Tambah Pengadilan
-  const pengadilanList = [
-    { id: "peng1", nama: "PN Jakarta", alamat: "Jakarta Pusat" },
-    { id: "peng2", nama: "PN Surabaya", alamat: "Surabaya Timur" },
-    { id: "peng3", nama: "PN Bandung", alamat: "Bandung Barat" },
-    { id: "peng4", nama: "PN Semarang", alamat: "Semarang Tengah" },
-    { id: "peng5", nama: "PN Medan", alamat: "Medan Kota" },
-  ];
-
-  await prisma.pengadilan.createMany({
-    data: pengadilanList,
-    skipDuplicates: true,
-  });
-
-  // Ambil daftar pengadilan
-  const daftarPengadilan = await prisma.pengadilan.findMany();
-
-  // Tambah 100 Hakim
-  const hakimList = [];
-  for (let i = 1; i <= 100; i++) {
+  for (let i = 1; i <= 500; i++) {
     const pengadilan = daftarPengadilan[i % daftarPengadilan.length]; // Rotasi pengadilan
 
     hakimList.push({
-      id: `hakim${i}`,
       nip: `19770813${2000 + i}121002`,
       nama: `Hakim ${i}`,
       tempat_lahir: `Kota ${i}`,

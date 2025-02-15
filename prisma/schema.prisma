@@ -50,7 +50,7 @@ model Hakim {
   pendidikan  Pendidikan[]
   pekerjaan   Pekerjaan[]
 
-  @@fulltext([nip, nama, jabatan, golongan])
+  @@fulltext([nip, nama, jabatan, golongan, pengadilanId])
 }
 
 model Pemberitaan {

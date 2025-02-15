@@ -17,7 +17,7 @@ export class HakimServices {
   }
 
   static async GETID(id) {
-    return await prisma.hakim.findUnique({
+    return await prisma.hakim.findMany({
       where: {
         id: id,
       },
