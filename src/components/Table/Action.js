@@ -28,20 +28,13 @@ export const createAction = async (_, formData) => {
   revalidatePath("/dashboard/pengadilan");
 };
 
-export const updateAction = async (_, formData) => {
+export const updateAction = async (data) => {
   try {
-    const rawFormData = {
-      nama: formData.get("nama"),
-      alamat: formData.get("alamat"),
-    };
-
-    await fetch(
-      `${process.env.API_URL}/api/v1/pengadilan/${formData.get("id")}`,
-      {
-        method: "PATCH",
-        body: JSON.stringify(rawFormData),
-      }
-    ).then(async (res) => {
+    console.log(data);
+    await fetch(`${process.env.API_URL}/api/v1/pengadilan/${data.id}`, {
+      method: "PATCH",
+      body: JSON.stringify(data),
+    }).then(async (res) => {
       const error = await res.json();
       if (!res.ok) {
         return { message: error?.issues[0].message };
@@ -52,8 +45,6 @@ export const updateAction = async (_, formData) => {
   } catch (error) {
     throw new ErrorResponse(500, error.message);
   }
-
-  revalidatePath("/dashboard/pengadilan");
 };
 
 export const deleteAction = async (id) => {

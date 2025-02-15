@@ -15,6 +15,7 @@ import UpdateAction from "./UpdateAction";
 import CetakPdfAction from "./CetakAction";
 import { updateViewPengadilan } from "./Action";
 import { useQuery } from "@tanstack/react-query";
+import { Asul } from "next/font/google";
 
 export const DataPengadilan = () => {
   const { data, isPendding } = useQuery({
@@ -49,7 +50,7 @@ export const DataPengadilan = () => {
                 <TableCell>{item._count.Hakim} Orang</TableCell>
                 <TableCell className="space-x-2 flex">
                   <DeleteAction id={item.id} />
-                  <UpdateAction id={item.id} data={item} />
+                  <UpdateAction id={item.id} />
                 </TableCell>
               </TableRow>
             ))}

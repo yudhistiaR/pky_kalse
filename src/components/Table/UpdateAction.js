@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import {
   Dialog,
   DialogContent,
@@ -13,13 +14,42 @@ import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import { Pencil } from "lucide-react";
 import { updateAction } from "./Action";
-import { useActionState } from "react";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useForm, Controller } from "react-hook-form";
+import { toast } from "sonner";
 
-const UpdateAction = ({ id, data }) => {
-  const [state, formAction, pending] = useActionState(updateAction, {});
+const UpdateAction = ({ id }) => {
+  const [open, setOpen] = useState(false);
+
+  const queryclient = useQueryClient();
+  const { control, handleSubmit, reset } = useForm();
+
+  const { data } = useQuery({
+    queryKey: ["pengadilan", id],
+    queryFn: async () => {
+      const res = await fetch(`/api/v1/pengadilan/${id}`);
+      const data = await res.json();
+      return data[0];
+    },
+  });
+
+  const { mutate, isPending } = useMutation({
+    mutationKey: ["pengadilan"],
+    mutationFn: (values) => updateAction({ ...values, id: id }),
+
+    onSuccess: () => {
+      setOpen(false);
+      toast.success("Berhasil mengubah data");
+      queryclient.invalidateQueries({ queryKey: ["pengadilan"] });
+    },
+    onError: () => {
+      setOpen(false);
+      toast.error("Gagal mengubah data");
+    },
+  });
 
   return (
-    <Dialog>
+    <Dialog onOpenChange={() => setOpen(true)} open={open}>
       <DialogTrigger asChild>
         <Button size="icon">
           <Pencil />
@@ -29,37 +59,58 @@ const UpdateAction = ({ id, data }) => {
         <DialogHeader>
           <DialogTitle>Edit Data</DialogTitle>
         </DialogHeader>
-        <form action={formAction} className="w-full h-full block">
-          <Input required id="id" name="id" defaultValue={id} type="hidden" />
+        <form
+          onSubmit={handleSubmit((values) =>
+            mutate(values, { onSuccess: () => reset() })
+          )}
+          className="w-full h-full block"
+        >
           <div className="flex gap-2 py-4">
             <Label htmlFor="nama">Nama Pengadilan</Label>
-            <Input
-              required
-              type="text"
-              id="nama"
+            <Controller
               name="nama"
-              defaultValue={data.nama}
+              control={control}
+              render={({ field }) => (
+                <Input
+                  type="text"
+                  id="nama"
+                  {...field}
+                  value={field.value ?? data.nama}
+                />
+              )}
             />
-            <p aria-live="polite">{state?.message}</p>
           </div>
           <div className="flex gap-2 py-4">
             <Label htmlFor="alamat">Alamat</Label>
-            <textarea
-              rows={4}
-              cols={30}
-              id="alamat"
+            <Controller
               name="alamat"
-              defaultValue={data.alamat}
-              className="border p-2"
+              control={control}
+              render={({ field }) => (
+                <textarea
+                  rows={4}
+                  id="alamat"
+                  {...field}
+                  defaultValue={field.value ?? data.alamat}
+                  className="border p-2 w-full"
+                />
+              )}
             />
-            <p aria-live="polite">{state?.message}</p>
           </div>
           <DialogFooter>
+            <Button
+              type="button"
+              variant="destructive"
+              onClick={() => setOpen(false)}
+              disabled={isPending}
+              className="w-full pr-2"
+            >
+              Batal
+            </Button>
             <Button
               className="w-full"
               size="lg"
               type="submit"
-              disabled={pending}
+              disabled={isPending}
             >
               Simpan
             </Button>
