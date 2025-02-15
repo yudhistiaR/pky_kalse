@@ -40,7 +40,7 @@ export const updateAction = async (_, formData) => {
       {
         method: "PATCH",
         body: JSON.stringify(rawFormData),
-      },
+      }
     ).then(async (res) => {
       const error = await res.json();
       if (!res.ok) {
@@ -61,8 +61,6 @@ export const deleteAction = async (id) => {
     method: "DELETE",
     body: JSON.stringify(id),
   }).catch((e) => console.log(e));
-
-  revalidatePath("/dashboard/pengadilan");
 };
 
 export const updateViewPengadilan = async () => {

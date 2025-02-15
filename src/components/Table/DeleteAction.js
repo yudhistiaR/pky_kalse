@@ -14,8 +14,25 @@ import {
 import { Trash2 } from "lucide-react";
 import { buttonVariants } from "@/components/ui/button";
 import { deleteAction } from "./Action";
+import { useQueryClient, useMutation } from "@tanstack/react-query";
+import { toast } from "sonner";
 
 const DeleteAction = (id) => {
+  const queryClient = useQueryClient();
+
+  const { mutate } = useMutation({
+    mutationKey: ["pengadilan"],
+    mutationFn: async (id) => {
+      return await deleteAction(id);
+    },
+    onSuccess: () => {
+      toast.success("Berhasil menghapus data");
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries(["pengadilan"]);
+    },
+  });
+
   return (
     <AlertDialog>
       <AlertDialogTrigger
@@ -32,7 +49,7 @@ const DeleteAction = (id) => {
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel>Batal</AlertDialogCancel>
-          <AlertDialogAction onClick={async () => await deleteAction(id)}>
+          <AlertDialogAction onClick={() => mutate(id)}>
             Hapus
           </AlertDialogAction>
         </AlertDialogFooter>
