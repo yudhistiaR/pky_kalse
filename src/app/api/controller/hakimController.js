@@ -75,4 +75,15 @@ export class HakimController {
       return errorResponse(error);
     }
   }
+
+  static async DELETEMANY(req) {
+    try {
+      const request = await req.json();
+      const response = await HakimServices.DELETEMANY(request);
+
+      return NextResponse.json(response, { status: 200 });
+    } catch (error) {
+      return errorResponse(error);
+    }
+  }
 }

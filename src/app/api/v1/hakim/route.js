@@ -20,3 +20,7 @@ export async function GET(req, res) {
 export async function POST(req, res) {
   return HakimController.CREATE(req);
 }
+
+export async function DELETE(req, _) {
+  return HakimController.DELETEMANY(req);
+}

@@ -108,4 +108,13 @@ export class HakimServices {
   static async DELETE(id) {
     return await prisma.hakim.delete({ where: { id: id } });
   }
+  static async DELETEMANY(req) {
+    return await prisma.hakim.deleteMany({
+      where: {
+        id: {
+          in: req.userId,
+        },
+      },
+    });
+  }
 }
