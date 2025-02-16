@@ -53,7 +53,7 @@ export class MetaDataServices {
       };
     } else if (mutasi == "exit") {
       let hasilFilter = listMetaData.filter((h) =>
-        pengadilanSet.has(extractPengadilan(h.jabatan_lama))
+        pengadilanSet.has(h.jabatan_lama)
       );
 
       if (searchData && searchData.trim() !== "") {
