@@ -91,9 +91,7 @@ const NavLink = ({ path }) => {
             }
             className={cn(
               "flex justify-between items-center w-full text-left gap-2 transition-colors duration-300 font-semibold p-4 hover:bg-gray-200 hover:border-r-4 hover:border-amber-600",
-              path.startsWith(item.url)
-                ? "border-r-4 border-amber-600 bg-gray-200"
-                : ""
+              path === item.url ? "border-r-4 border-amber-600 bg-gray-200" : ""
             )}
           >
             <div className="flex items-center gap-2">
