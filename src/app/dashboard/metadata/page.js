@@ -3,7 +3,7 @@ import { DataTable } from "@/components/metadata/data-table";
 const MetaDataPage = async () => {
   return (
     <div className="w-full h-full">
-      <h1 className="text-2xl font-bold">Data TPM</h1>
+      <h1 className="text-2xl font-bold">Mutasi Hakim</h1>
       <DataTable />
     </div>
   );
