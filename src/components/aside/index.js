@@ -110,7 +110,7 @@ const NavLink = ({ path }) => {
                     href={sub.url}
                     className={cn(
                       "flex items-center py-2 text-sm font-semibold hover:bg-gray-300",
-                      path.startsWith(sub.url)
+                      path.startsWith(sub.url.split("?")[0])
                         ? "border-r-4 border-amber-600 bg-gray-200"
                         : ""
                     )}
