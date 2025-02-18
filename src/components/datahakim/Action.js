@@ -45,7 +45,8 @@ export const getDetailHakim = async (id) => {
   const res = await fetch(`${process.env.API_URL}/api/v1/hakim/${id}`, {
     method: "GET",
   });
-  return await res.json();
+  const datas = await res.json();
+  return datas[0];
 };
 
 export const getHakim = async () => {

@@ -41,7 +41,7 @@ const DetailHakim = () => {
       <Button
         onClick={handlePrint}
         style={{ marginTop: "20px", padding: "10px 20px" }}
-        disabled={isPending || !data || data.length === 0}
+        disabled={isPending || !data || Object.keys(data).length === 0}
       >
         Cetak PDF
       </Button>
@@ -60,62 +60,59 @@ const DetailHakim = () => {
       >
         <KopSurat />
         <h2 className="text-2xl font-bold mb-4 text-center">
-          {`Profile Hakim ${pengadilan}`.toUpperCase()}
+          {`Profile Hakim ${
+            !isPending ? data.pengadilan.nama : "Loading..."
+          }`.toUpperCase()}
         </h2>
         {isPending ? (
           <div className="text-center h-96 flex items-center justify-center">
             <p className="text-lg text-slate-400">Loading...</p>
           </div>
-        ) : data && data.length > 0 ? (
-          data?.map((hakim, index) => (
-            <table
-              key={index}
-              className="w-full border-collapse border border-gray-300 mb-6"
-            >
-              <tbody>
-                {detailFields.map(({ key, label }) => (
-                  <tr key={key} className="border-b border-gray-300">
-                    <td className="p-3 font-semibold bg-gray-100 w-1/3">
-                      {label}
-                    </td>
-                    <td className="p-3">{hakim[key]}</td>
-                  </tr>
-                ))}
-                <tr className="border-b border-gray-300">
-                  <td className="p-3 font-semibold bg-gray-100">
-                    Riwayat Pendidikan
+        ) : Object.keys(data).length > 0 ? (
+          <table className="w-full border-collapse border border-gray-300 mb-6">
+            <tbody>
+              {detailFields.map(({ key, label }) => (
+                <tr key={key} className="border-b border-gray-300">
+                  <td className="p-3 font-semibold bg-gray-100 w-1/3">
+                    {label}
                   </td>
-                  <td className="p-3">
-                    {hakim.pendidikan?.length > 0 ? (
-                      <ul className="list-disc list-inside">
-                        {hakim.pendidikan.map((item, idx) => (
-                          <li key={idx}>{item.nama}</li>
-                        ))}
-                      </ul>
-                    ) : (
-                      <span className="text-gray-400">Tidak ada data</span>
-                    )}
-                  </td>
+                  <td className="p-3">{data[key]}</td>
                 </tr>
-                <tr>
-                  <td className="p-3 font-semibold bg-gray-100">
-                    Riwayat Pekerjaan
-                  </td>
-                  <td className="p-3">
-                    {hakim.pekerjaan?.length > 0 ? (
-                      <ul className="list-decimal list-inside">
-                        {hakim.pekerjaan.map((item, idx) => (
-                          <li key={idx}>{item.nama}</li>
-                        ))}
-                      </ul>
-                    ) : (
-                      <span className="text-gray-400">Tidak ada data</span>
-                    )}
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          ))
+              ))}
+              <tr className="border-b border-gray-300">
+                <td className="p-3 font-semibold bg-gray-100">
+                  Riwayat Pendidikan
+                </td>
+                <td className="p-3">
+                  {data.pendidikan?.length > 0 ? (
+                    <ul className="list-disc list-inside">
+                      {data.pendidikan.map((item, idx) => (
+                        <li key={idx}>{item.nama}</li>
+                      ))}
+                    </ul>
+                  ) : (
+                    <span className="text-gray-400">Tidak ada data</span>
+                  )}
+                </td>
+              </tr>
+              <tr>
+                <td className="p-3 font-semibold bg-gray-100">
+                  Riwayat Pekerjaan
+                </td>
+                <td className="p-3">
+                  {data.pekerjaan?.length > 0 ? (
+                    <ul className="list-decimal list-inside">
+                      {data.pekerjaan.map((item, idx) => (
+                        <li key={idx}>{item.nama}</li>
+                      ))}
+                    </ul>
+                  ) : (
+                    <span className="text-gray-400">Tidak ada data</span>
+                  )}
+                </td>
+              </tr>
+            </tbody>
+          </table>
         ) : (
           <div className="text-center h-96 flex items-center justify-center">
             <p className="text-lg text-slate-400">Data Tidak Tersedia</p>
