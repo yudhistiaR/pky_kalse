@@ -13,6 +13,7 @@ const PrintButton = ({ onPrint, disabled }) => (
 
 const PrintableContent = ({ data, ref }) => {
   const groupedData = {};
+  let counter = 1;
 
   data?.forEach((item, index) => {
     if (!groupedData[item.pengadilan.nama]) {
@@ -45,7 +46,7 @@ const PrintableContent = ({ data, ref }) => {
           {Object.keys(groupedData).map((pengadilan) => {
             return groupedData[pengadilan].map((item, index) => (
               <tr key={item.id} className="border border-gray-500">
-                <td className="border border-gray-500 ">{item.no}</td>
+                <td className="border border-gray-500 ">{counter++}</td>
                 <td className="border border-gray-500 ">{item.nama}</td>
                 <td className="border border-gray-500 ">{item.jabatan}</td>
                 <td className="border border-gray-500 ">
@@ -83,15 +84,12 @@ const DataNamaHakim = ({ data }) => {
     onAfterPrint: () => toast.success("Berhasil mencetak PDF"),
   });
 
-  console.log(data);
-
   return (
     <div>
       <PrintButton
         onPrint={handlePrint}
         disabled={!data || data?.data.length === 0}
       />
-      {/* Gunakan ref langsung ke PrintableContent */}
       <div style={{ display: "none" }}>
         <PrintableContent ref={printRef} data={data?.data} />
       </div>
