@@ -1,8 +1,11 @@
+import Container from "@/components/layout/Container";
+import AccountTab from "@/components/Tabs/AcountTab";
+
 const AccountPage = () => {
   return (
-    <div>
-      <h1>AccountPage</h1>
-    </div>
+    <Container>
+      <AccountTab />
+    </Container>
   );
 };
 

@@ -13,4 +13,9 @@ export class AuthValidation {
     jabatan: z.string().min(1),
     password: z.string().min(1),
   });
+
+  static CHANGEPASSWORD = z.object({
+    old_password: z.string().min(1),
+    new_password: z.string().min(1),
+  });
 }

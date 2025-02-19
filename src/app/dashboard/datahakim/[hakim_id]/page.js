@@ -24,8 +24,6 @@ const DetailHakim = () => {
     queryFn: async () => await getDetailHakim(hakim_id),
   });
 
-  const pengadilan = data?.[0]?.pengadilan?.nama ?? "Loading...";
-
   const detailFields = [
     { key: "nip", label: "NIP" },
     { key: "nama", label: "Nama" },
