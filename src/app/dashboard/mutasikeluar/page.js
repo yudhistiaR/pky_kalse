@@ -1,4 +1,5 @@
 import { DataTable } from "@/components/metadata/data-table";
+import { Suspense } from "react";
 
 const MutasiMasukPage = async () => {
   return (
@@ -6,7 +7,9 @@ const MutasiMasukPage = async () => {
       <h1 className="text-2xl font-bold">
         Mutasi Hakim keluar Kalimantan Selatan
       </h1>
-      <DataTable />
+      <Suspense fallback={<p>Loading...</p>}>
+        <DataTable />
+      </Suspense>
     </div>
   );
 };
