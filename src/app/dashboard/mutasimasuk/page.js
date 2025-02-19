@@ -1,5 +1,3 @@
-"use client";
-
 import { DataTable } from "@/components/metadata/data-table";
 import { Suspense } from "react";
 

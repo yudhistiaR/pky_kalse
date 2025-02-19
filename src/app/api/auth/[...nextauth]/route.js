@@ -44,12 +44,16 @@ const handler = NextAuth({
   secret: process.env.NEXTAUTH_SECRET,
   session: { strategy: "jwt" },
   callbacks: {
-    async jwt({ token, user }) {
+    async jwt({ token, user, trigger, session }) {
       if (user) {
         token.id = user.id;
         token.username = user.username;
         token.email = user.email;
         token.jabatan = user.jabatan;
+      }
+
+      if (trigger === "update" && session.username) {
+        token.username = session.username;
       }
       return token;
     },

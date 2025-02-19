@@ -12,7 +12,7 @@ import { Input } from "../ui/input";
 import { Loading } from "../Loading";
 
 const ProfileCard = () => {
-  const { data: session } = useSession();
+  const { data: session, update } = useSession();
 
   const queryclient = useQueryClient();
 
@@ -54,7 +54,12 @@ const ProfileCard = () => {
       {!isLoading || !isPending ? (
         <form
           onSubmit={handleSubmit((values) =>
-            mutate(values, { onSuccess: reset() }),
+            mutate(values, {
+              onSuccess: () => {
+                update({ username: values?.username });
+                reset();
+              },
+            }),
           )}
         >
           <div className="w-full h-full grid gap-4">
